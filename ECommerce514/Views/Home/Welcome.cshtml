@@ -1,0 +1,13 @@
+﻿@using ECommerce514.ViewModels
+@model PersonVM
+
+<h4>Your age is @Model.Age</h4>
+<h4>Your name is @Model.Name</h4>
+<h4>Your address is @Model.Address</h4>
+
+<ul>
+    @foreach(var item in Model.Skills)
+    {
+        <li>@item</li>
+    }
+</ul>
