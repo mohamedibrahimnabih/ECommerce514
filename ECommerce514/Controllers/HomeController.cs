@@ -2,12 +2,15 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ECommerce514.Models;
 using ECommerce514.ViewModels;
+using ECommerce514.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce514.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ApplicationDbContext _context = new();
 
     public HomeController(ILogger<HomeController> logger)
     {
@@ -16,7 +19,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var product = _context.Products.Include(e => e.Category);
+
+        // Add Filter
+        // Join
+        // Skip Take
+
+        return View(product.ToList());
     }
 
     public IActionResult Privacy()
