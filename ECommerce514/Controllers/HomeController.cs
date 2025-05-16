@@ -34,7 +34,8 @@ public class HomeController : Controller
         {
             new("C++"),
             new("C#"),
-            new("SQL SERVER")
+            new("SQL SERVER"),
+            new("EF"),
         };
 
         return View(model: new PersonVM {
