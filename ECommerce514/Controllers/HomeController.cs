@@ -17,14 +17,35 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(ProductsWithFilterVM productsWithFilterVM)
     {
-        var product = _context.Products.Include(e => e.Category);
+        IQueryable<Product> product = _context.Products.Include(e => e.Category);
+        var categories = _context.Categories;
 
-        // Add Filter
-        // Join
-        // Skip Take
+        // Filter Product
+        if(productsWithFilterVM.ProductName is not null)
+        {
+            product = product.Where(e => e.Name.Contains(productsWithFilterVM.ProductName));
+            //ViewData["productName"] = productName;
+            ViewBag.productName = productsWithFilterVM.ProductName;
+        }
 
+        if(productsWithFilterVM.MinPrice > 0)
+        {
+            product = product.Where(e => e.Price - (e.Price * (decimal)(e.Discount / 100.0)) >= (decimal)productsWithFilterVM.MinPrice);
+            //ViewData["minPrice"] = minPrice;
+            ViewBag.minPrice = productsWithFilterVM.MinPrice;
+        }
+
+        if(productsWithFilterVM.CategoryId > 0 && productsWithFilterVM.CategoryId < categories.Count())
+        {
+            product = product.Where(e => e.CategoryId == productsWithFilterVM.CategoryId);
+            ViewData["categoryId"] = productsWithFilterVM.CategoryId;
+            //ViewBag.categoryId = categoryId;
+        }
+
+        // Categories
+        ViewData["listOfCategories"] = categories.ToList();
         return View(product.ToList());
     }
 
@@ -36,7 +57,9 @@ public class HomeController : Controller
         {
             var relatedProduct = _context.Products.Where(e => e.CategoryId == product.CategoryId && id != e.ProductId).Skip(0).Take(4);
 
-            var topProduct = _context.Products.Where(e => e.ProductId != id).OrderByDescending(e=>e.Traffic).Skip(0).Take(4);
+            var topProduct = _context.Products.Where(e => e.ProductId != id).OrderByDescending(e => e.Traffic).Skip(0).Take(4);
+
+            var similarProductsName = _context.Products.Where(e=>e.Name.Contains(product.Name) && id != e.ProductId).Skip(0).Take(4);
 
             product.Traffic++;
             _context.SaveChanges();
@@ -46,6 +69,7 @@ public class HomeController : Controller
                 Product = product,
                 RelatedProducts = relatedProduct.ToList(),
                 TopProducts = topProduct.ToList(),
+                SimilarProductsName = similarProductsName.ToList(),
             });
         }
 

@@ -6,5 +6,6 @@
 
         public List<Product> RelatedProducts { get; set; } = null!;
         public List<Product> TopProducts { get; set; } = null!;
+        public List<Product> SimilarProductsName { get; set; } = null!;
     }
 }
