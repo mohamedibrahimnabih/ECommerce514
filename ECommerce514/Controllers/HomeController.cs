@@ -28,6 +28,30 @@ public class HomeController : Controller
         return View(product.ToList());
     }
 
+    public IActionResult Details(int id)
+    {
+        var product = _context.Products.Include(e => e.Category).FirstOrDefault(e => e.ProductId == id);
+
+        if(product is not null)
+        {
+            var relatedProduct = _context.Products.Where(e => e.CategoryId == product.CategoryId && id != e.ProductId).Skip(0).Take(4);
+
+            var topProduct = _context.Products.Where(e => e.ProductId != id).OrderByDescending(e=>e.Traffic).Skip(0).Take(4);
+
+            product.Traffic++;
+            _context.SaveChanges();
+
+            return View(new ProductWithRelatedVM()
+            {
+                Product = product,
+                RelatedProducts = relatedProduct.ToList(),
+                TopProducts = topProduct.ToList(),
+            });
+        }
+
+        return NotFound();
+    }
+
     public IActionResult Privacy()
     {
         return View();

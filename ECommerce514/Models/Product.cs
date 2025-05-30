@@ -11,7 +11,7 @@
         public int Quantity { get; set; }
         public double Rate { get; set; }
         public double Discount { get; set; }
-
+        public int Traffic { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public int BrandId { get; set; }
