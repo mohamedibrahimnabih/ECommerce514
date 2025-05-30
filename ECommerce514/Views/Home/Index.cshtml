@@ -30,7 +30,7 @@
                             <input type="number" class="form-control" placeholder="Min Price" name="minPrice" value="@ViewBag.minPrice">
                         </div>
                         <div class="col-md-2">
-                            <input type="number" class="form-control" placeholder="Max Price" name="maxPrice">
+                            <input type="number" class="form-control" placeholder="Max Price" name="maxPrice" value="@ViewBag.maxPrice">
                         </div>
 
                         <!-- Category -->
@@ -74,7 +74,7 @@
                         <!-- Hot Product Checkbox -->
                         <div class="col-md-1">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input">
+                                <input type="checkbox" class="form-check-input" name="isHot" value="true" @(ViewBag.isHot is not null && ViewBag.isHot ? "checked" : "")>
                                 <label class="form-check-label">Hot</label>
                             </div>
                         </div>
@@ -146,4 +146,25 @@ else
             </div>
         </div>
     </section>
+    <div class="row my-3">
+        <div class="col-12 d-flex justify-content-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    @if (!(ViewBag.currentPage == 1))
+                    {
+                        <li class="page-item"><a class="page-link" href="/?page=@(ViewBag.currentPage - 1)">Previous</a></li>
+                    }
+                    @for (int i = 1; i <= ViewBag.totalNumberOfPages; i++)
+                    {
+                        <li class="page-item"><a class="page-link" href="/?page=@i">@i</a></li>
+                    }
+                    @if (!(ViewBag.totalNumberOfPages == ViewBag.currentPage))
+                    {
+                        <li class="page-item"><a class="page-link" href="/?page=@(ViewBag.currentPage + 1)">Next</a></li>
+                    }
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
 }

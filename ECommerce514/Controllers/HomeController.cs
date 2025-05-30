@@ -4,6 +4,7 @@ using ECommerce514.Models;
 using ECommerce514.ViewModels;
 using ECommerce514.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ECommerce514.Controllers;
 
@@ -17,35 +18,65 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index(ProductsWithFilterVM productsWithFilterVM)
+    public IActionResult Index(ProductsWithFilterVM productsWithFilterVM, int page = 1)
     {
         IQueryable<Product> product = _context.Products.Include(e => e.Category);
         var categories = _context.Categories;
+        const double discountThreshold = 50;
+        const double totalNumberOfProductInPages = 8.0;
 
-        // Filter Product
-        if(productsWithFilterVM.ProductName is not null)
+        #region Filter Product
+        if (productsWithFilterVM.ProductName is not null)
         {
             product = product.Where(e => e.Name.Contains(productsWithFilterVM.ProductName));
             //ViewData["productName"] = productName;
             ViewBag.productName = productsWithFilterVM.ProductName;
         }
 
-        if(productsWithFilterVM.MinPrice > 0)
+        if (productsWithFilterVM.MinPrice > 0)
         {
             product = product.Where(e => e.Price - (e.Price * (decimal)(e.Discount / 100.0)) >= (decimal)productsWithFilterVM.MinPrice);
             //ViewData["minPrice"] = minPrice;
             ViewBag.minPrice = productsWithFilterVM.MinPrice;
         }
 
-        if(productsWithFilterVM.CategoryId > 0 && productsWithFilterVM.CategoryId < categories.Count())
+        if (productsWithFilterVM.MaxPrice > 0)
+        {
+            product = product.Where(e => e.Price - (e.Price * (decimal)(e.Discount / 100.0)) <= (decimal)productsWithFilterVM.MaxPrice);
+            //ViewData["maxPrice"] = maxPrice;
+            ViewBag.maxPrice = productsWithFilterVM.MaxPrice;
+        }
+
+        if (productsWithFilterVM.CategoryId > 0 && productsWithFilterVM.CategoryId < categories.Count())
         {
             product = product.Where(e => e.CategoryId == productsWithFilterVM.CategoryId);
             ViewData["categoryId"] = productsWithFilterVM.CategoryId;
             //ViewBag.categoryId = categoryId;
         }
 
-        // Categories
-        ViewData["listOfCategories"] = categories.ToList();
+        if (productsWithFilterVM.IsHot)
+        {
+            product = product.Where(e => e.Discount > discountThreshold);
+            ViewBag.isHot = productsWithFilterVM.IsHot;
+        }
+        #endregion
+
+        #region Pagination
+        var totalNumberOfPages = Math.Ceiling(product.Count() / totalNumberOfProductInPages);
+
+        if (totalNumberOfPages < page)
+            return NotFound();
+
+        product = product.Skip((page - 1) * (int)totalNumberOfProductInPages).Take((int)totalNumberOfProductInPages);
+
+        ViewBag.totalNumberOfPages = totalNumberOfPages;
+        ViewBag.currentPage = page;
+        #endregion
+
+        #region Categories
+        ViewData["listOfCategories"] = categories.ToList(); 
+        #endregion
+
         return View(product.ToList());
     }
 
