@@ -1,0 +1,61 @@
+﻿@model CategoriesWithBrandsVM
+
+<div class="container">
+    <div class="row my-3">
+        <div class="col-12">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="Name">
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a description here" id="description" style="height: 100px" name="description"></textarea>
+                        <label for="description">You Desciption Here...</label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" class="form-control" id="price" name="price">
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity">
+                </div>
+                <div class="mb-3">
+                    <label for="mainImg" class="form-label">MainImg</label>
+                    <input type="text" class="form-control" id="mainImg" name="mainImg">
+                </div>
+                <div class="mb-3">
+                    <label for="categoryId" class="form-label">CategoryId</label>
+                    @* <input type="number" class="form-control" id="categoryId" name="categoryId"> *@
+                    <select name="CategoryId" class="form-select">
+                        @foreach(var item in Model.Categories)
+                        {
+                            <option value="@item.Id" >@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="brandId" class="form-label">BrandId</label>
+                    @* <input type="number" class="form-control" id="brandId" name="brandId"> *@
+                    <select name="BrandId" class="form-select">
+                        @foreach (var item in Model.Brands)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
