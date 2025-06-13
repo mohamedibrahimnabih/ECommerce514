@@ -30,6 +30,6 @@ body {
   text-align: start;
 }
 
-a {
+header nav a {
     color: black !important;
 }
