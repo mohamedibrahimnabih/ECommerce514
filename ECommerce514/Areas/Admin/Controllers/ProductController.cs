@@ -35,6 +35,8 @@ namespace ECommerce514.Areas.Admin.Controllers
             _context.Products.Add(product);
             _context.SaveChanges();
 
+            TempData["success-notification"] = "Add Product Successfully";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -70,6 +72,8 @@ namespace ECommerce514.Areas.Admin.Controllers
                 _context.Products.Update(product);
                 _context.SaveChanges();
 
+                TempData["success-notification"] = "Remove Product Successfully";
+
                 return RedirectToAction(nameof(Index));
             //}
 
@@ -84,6 +88,8 @@ namespace ECommerce514.Areas.Admin.Controllers
             {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
+
+                TempData["success-notification"] = "Delete Product Successfully";
 
                 return RedirectToAction(nameof(Index));
             }

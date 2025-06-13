@@ -26,6 +26,10 @@ namespace ECommerce514.Areas.Admin.Controllers
             _context.Categories.Add(category);
             _context.SaveChanges();
 
+            //TempData["success-notification"] = "Add Category Successfully";
+
+            //Response.Cookies.Append("success-notification", "Add Category Successfully");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -47,6 +51,8 @@ namespace ECommerce514.Areas.Admin.Controllers
             _context.Categories.Update(category);
             _context.SaveChanges();
 
+            TempData["success-notification"] = "Update Category Successfully";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,6 +64,8 @@ namespace ECommerce514.Areas.Admin.Controllers
             {
                 _context.Categories.Remove(category);
                 _context.SaveChanges();
+
+                TempData["success-notification"] = "Delete Category Successfully";
 
                 return RedirectToAction(nameof(Index));
             }
