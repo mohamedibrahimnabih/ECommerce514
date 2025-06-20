@@ -1,7 +1,9 @@
 ﻿using ECommerce514.Data;
+using ECommerce514.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Threading.Tasks;
 
 namespace ECommerce514.Areas.Admin.Controllers
@@ -23,18 +25,38 @@ namespace ECommerce514.Areas.Admin.Controllers
             var categories = _context.Categories;
             var brands = _context.Brands;
 
-            CategoriesWithBrandsVM categoriesWithBrandsVM = new()
+            CategoriesWithBrandsWithProductVM categoriesWithBrandsWithProductVM = new()
             {
                 Categories = categories.ToList(),
-                Brands = brands.ToList()
+                Brands = brands.ToList(),
+                Product = new Product()
             };
 
-            return View(categoriesWithBrandsVM);
+            return View(categoriesWithBrandsWithProductVM);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile mainImg)
         {
+            //ModelState.Remove("Category");
+            //ModelState.Remove("Brand");
+
+            ModelState.Remove("mainImg");
+            if (!ModelState.IsValid)
+            {
+                var categories = _context.Categories;
+                var brands = _context.Brands;
+
+                CategoriesWithBrandsWithProductVM categoriesWithBrandsWithProductVM = new()
+                {
+                    Categories = categories.ToList(),
+                    Brands = brands.ToList(),
+                    Product = product
+                };
+
+                return View(categoriesWithBrandsWithProductVM);
+            }
+
             if (mainImg is not null && mainImg.Length > 0)
             {
                 // Save Img in wwwroot
@@ -62,7 +84,7 @@ namespace ECommerce514.Areas.Admin.Controllers
         {
             var product = _context.Products.Find(productId);
 
-            if(product is not null)
+            if (product is not null)
             {
                 var categories = _context.Categories;
                 var brands = _context.Brands;
@@ -87,6 +109,22 @@ namespace ECommerce514.Areas.Admin.Controllers
 
             //if(result)
             //{
+
+            ModelState.Remove("mainImg");
+            if (!ModelState.IsValid)
+            {
+                var categories = _context.Categories;
+                var brands = _context.Brands;
+
+                CategoriesWithBrandsWithProductVM categoriesWithBrandsWithProductVM = new()
+                {
+                    Categories = categories.ToList(),
+                    Brands = brands.ToList(),
+                    Product = product
+                };
+
+                return View(categoriesWithBrandsWithProductVM);
+            }
 
             var productInDB = _context.Products.AsNoTracking().FirstOrDefault(e=>e.ProductId == product.ProductId);
 
@@ -139,6 +177,13 @@ namespace ECommerce514.Areas.Admin.Controllers
 
             if (product is not null)
             {
+                // Delete old Img in wwwroot
+                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", product.MainImg);
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+
                 _context.Products.Remove(product);
                 _context.SaveChanges();
 

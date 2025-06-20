@@ -4,26 +4,30 @@
     <div class="row my-3">
         <div class="col-12">
             <form enctype="multipart/form-data" method="post">
-                @* <input type="hidden" name="ProductId" value="@Model.Product.ProductId" /> *@
+                <input type="hidden" asp-for="Product.ProductId" />
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="Name" value="@Model.Product.Name">
+                    <input type="text" class="form-control" asp-for="Product.Name">
+                    <span class="text-danger" asp-validation-for="Product.Name"></span>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a description here" id="description" style="height: 100px" name="description">@Model.Product.Description</textarea>
+                        <textarea class="form-control" placeholder="Leave a description here"  style="height: 100px" asp-for="Product.Description"></textarea>
                         <label for="description">You Desciption Here...</label>
                     </div>
+                    <span class="text-danger" asp-validation-for="Product.Description"></span>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
-                    <input type="number" class="form-control" id="price" name="price" value="@Model.Product.Price">
+                    <input type="number" class="form-control" asp-for="Product.Price">
+                    <span class="text-danger" asp-validation-for="Product.Price"></span>
                 </div>
                 <div class="mb-3">
                     <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" value="@Model.Product.Quantity">
+                    <input type="number" class="form-control" asp-for="Product.Quantity">
+                    <span class="text-danger" asp-validation-for="Product.Quantity"></span>
                 </div>
                 <div class="mb-3">
                     <label for="mainImg" class="form-label">Main Image</label>
@@ -41,11 +45,12 @@
 
                     <!-- Hidden input to keep the old image if not changed -->
                     <input type="hidden" name="OldMainImg" value="~/images/@Model.Product.MainImg" />
+                    <span class="text-danger" asp-validation-for="Product.MainImg"></span>
                 </div>
                 <div class="mb-3">
                     <label for="categoryId" class="form-label">Category Name</label>
                     @* <input type="number" class="form-control" id="categoryId" name="categoryId" value="@Model.Product.CategoryId"> *@
-                    <select name="CategoryId" class="form-select">
+                    <select asp-for="Product.CategoryId" class="form-select">
                         @foreach (var item in Model.Categories)
                         {
                             if(item.Id == Model.Product.CategoryId)
@@ -58,11 +63,12 @@
                             }
                          }
                      </select>
+                    <span class="text-danger" asp-validation-for="Product.CategoryId"></span>
                 </div>
                 <div class="mb-3">
                     <label for="brandId" class="form-label">Brand Name</label>
                     @* <input type="number" class="form-control" id="brandId" name="brandId" value="@Model.Product.BrandId"> *@
-                    <select name="BrandId" class="form-select">
+                    <select asp-for="Product.BrandId" class="form-select">
                         @foreach (var item in Model.Brands)
                         {
                             if (item.Id == Model.Product.BrandId)
@@ -75,10 +81,11 @@
                             }
                         }
                     </select>
+                    <span class="text-danger" asp-validation-for="Product.BrandId"></span>
                 </div>
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
-                    <select name="status" class="form-select">
+                    <select asp-for="Product.Status" class="form-select">
 
                         @if(Model.Product.Status)
                         {
@@ -91,6 +98,7 @@
                             <option value="false" selected >InActive</option>
                         }
                     </select>
+                    <span class="text-danger" asp-validation-for="Product.Status"></span>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

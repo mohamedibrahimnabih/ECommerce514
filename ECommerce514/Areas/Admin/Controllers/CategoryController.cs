@@ -17,16 +17,21 @@ namespace ECommerce514.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View(new Category());
         }
 
         [HttpPost]
         public IActionResult Create(Category category)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
             _context.Categories.Add(category);
             _context.SaveChanges();
 
-            //TempData["success-notification"] = "Add Category Successfully";
+            TempData["success-notification"] = "Add Category Successfully";
 
             //Response.Cookies.Append("success-notification", "Add Category Successfully");
 
@@ -48,6 +53,11 @@ namespace ECommerce514.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
             _context.Categories.Update(category);
             _context.SaveChanges();
 
