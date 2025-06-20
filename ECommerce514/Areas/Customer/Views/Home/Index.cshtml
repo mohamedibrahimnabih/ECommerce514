@@ -152,15 +152,43 @@ else
                 <ul class="pagination">
                     @if (!(ViewBag.currentPage == 1))
                     {
-                        <li class="page-item"><a class="page-link" href="/?page=@(ViewBag.currentPage - 1)">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="@Url.Action("Index", new {
+                            
+                            ProductName = ViewBag.productName,
+                            MinPrice = ViewBag.minPrice,
+                            MaxPrice = ViewBag.MaxPrice,
+                            CategoryId = ViewBag.categoryId,
+                            IsHot = ViewBag.isHot,
+                            page = ViewBag.currentPage - 1
+                        })">Previous</a></li>
                     }
                     @for (int i = 1; i <= ViewBag.totalNumberOfPages; i++)
                     {
-                        <li class="page-item"><a class="page-link" href="/?page=@i">@i</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new {
+
+                            ProductName = ViewBag.productName,
+                            MinPrice = ViewBag.minPrice,
+                            MaxPrice = ViewBag.MaxPrice,
+                            CategoryId = ViewBag.categoryId,
+                            IsHot = ViewBag.isHot,
+                            page = i
+                        })">@i</a>
+                        </li>
                     }
                     @if (!(ViewBag.totalNumberOfPages == ViewBag.currentPage))
                     {
-                        <li class="page-item"><a class="page-link" href="/?page=@(ViewBag.currentPage + 1)">Next</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new {
+
+                            ProductName = ViewBag.productName,
+                            MinPrice = ViewBag.minPrice,
+                            MaxPrice = ViewBag.MaxPrice,
+                            CategoryId = ViewBag.categoryId,
+                            IsHot = ViewBag.isHot,
+                            page = ViewBag.currentPage + 1
+                        })">Next</a>
+                        </li>
                     }
                     
                 </ul>

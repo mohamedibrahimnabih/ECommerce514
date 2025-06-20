@@ -1,5 +1,8 @@
 ﻿using ECommerce514.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ECommerce514.Areas.Admin.Controllers
 {
@@ -30,8 +33,23 @@ namespace ECommerce514.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product, IFormFile mainImg)
         {
+            if (mainImg is not null && mainImg.Length > 0)
+            {
+                // Save Img in wwwroot
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(mainImg.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await mainImg.CopyToAsync(stream);
+                }
+
+                // Save Img in DB
+                product.MainImg = fileName;
+            }
+
             _context.Products.Add(product);
             _context.SaveChanges();
 
@@ -63,18 +81,53 @@ namespace ECommerce514.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public async Task<IActionResult> Edit(Product product, IFormFile mainImg)
         {
             //var result = _context.Products.Any(e => e.ProductId == product.ProductId);
 
             //if(result)
             //{
+
+            var productInDB = _context.Products.AsNoTracking().FirstOrDefault(e=>e.ProductId == product.ProductId);
+
+            if(productInDB is not null)
+            {
+                if (mainImg is not null && mainImg.Length > 0)
+                {
+                    // Save new Img in wwwroot
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(mainImg.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await mainImg.CopyToAsync(stream);
+                    }
+
+                    // Delete old Img in wwwroot
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", productInDB.MainImg);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+
+                    // Update Img in DB
+                    product.MainImg = fileName;
+                }
+                else
+                {
+                    product.MainImg = productInDB.MainImg;
+                }
+
                 _context.Products.Update(product);
                 _context.SaveChanges();
 
-                TempData["success-notification"] = "Remove Product Successfully";
+                TempData["success-notification"] = "Update Product Successfully";
 
                 return RedirectToAction(nameof(Index));
+            }
+
+            return NotFound();
+
             //}
 
             //return NotFound();
