@@ -40,7 +40,7 @@ namespace ECommerce514.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
-            var category = _categoryRepository.GetOne(e => e.Id == id);
+            var category = _categoryRepository.GetOneAsync(e => e.Id == id);
 
             if(category is not null)
             {
@@ -67,7 +67,7 @@ namespace ECommerce514.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var category = _categoryRepository.GetOne(e => e.Id == id);
+            var category = await _categoryRepository.GetOneAsync(e => e.Id == id);
 
             if (category is not null)
             {

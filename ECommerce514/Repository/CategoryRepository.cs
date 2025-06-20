@@ -83,7 +83,7 @@ namespace ECommerce514.Repository
             return (await categories.ToListAsync());
         }
 
-        public async Task<Category?> GetOne(Expression<Func<Category, bool>>? expression = null, Expression<Func<Category, object>>[]? includes = null, bool tracked = true)
+        public async Task<Category?> GetOneAsync(Expression<Func<Category, bool>>? expression = null, Expression<Func<Category, object>>[]? includes = null, bool tracked = true)
         {
             return (await GetAsync(expression, includes, tracked)).FirstOrDefault();
         }
