@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce514.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce514.Models
 {
@@ -9,6 +10,7 @@ namespace ECommerce514.Models
         [MinLength(3)]
         [MaxLength(50)]
         public string Name { get; set; } = string.Empty;
+        [CustomLength(20)]
         public string? Description { get; set; }
         public bool Status { get; set; }
 

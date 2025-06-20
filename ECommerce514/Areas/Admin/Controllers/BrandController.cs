@@ -1,4 +1,5 @@
 ﻿using ECommerce514.Data;
+using ECommerce514.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce514.Areas.Admin.Controllers
@@ -17,12 +18,17 @@ namespace ECommerce514.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            return View(new Brand());
         }
 
         [HttpPost]
         public IActionResult Create(Brand brand)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(brand);
+            }
+
             _context.Brands.Add(brand);
             _context.SaveChanges();
 
@@ -46,6 +52,11 @@ namespace ECommerce514.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Brand brand)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(brand);
+            }
+
             _context.Brands.Update(brand);
             _context.SaveChanges();
 
