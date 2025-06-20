@@ -38,9 +38,9 @@ namespace ECommerce514.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var category = _categoryRepository.GetOneAsync(e => e.Id == id);
+            var category = await _categoryRepository.GetOneAsync(e => e.Id == id);
 
             if(category is not null)
             {
