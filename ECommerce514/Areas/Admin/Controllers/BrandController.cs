@@ -1,19 +1,27 @@
 ﻿using ECommerce514.Data;
 using ECommerce514.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ECommerce514.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class BrandController : Controller
     {
-        private ApplicationDbContext _context = new();
+        private readonly IBrandRepository _brandRepository;
 
-        public IActionResult Index()
+        //private ApplicationDbContext _context = new();
+
+        public BrandController(IBrandRepository brandRepository)
         {
-            var result = _context.Brands;
+            _brandRepository = brandRepository;
+        }
 
-            return View(result.ToList());
+        public async Task<IActionResult> Index()
+        {
+            var result = await _brandRepository.GetAsync();
+
+            return View(result);
         }
 
         public IActionResult Create()
@@ -22,24 +30,23 @@ namespace ECommerce514.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Brand brand)
+        public async Task<IActionResult> Create(Brand brand)
         {
             if (!ModelState.IsValid)
             {
                 return View(brand);
             }
 
-            _context.Brands.Add(brand);
-            _context.SaveChanges();
+            await _brandRepository.CreateAsync(brand);
 
             TempData["success-notification"] = "Add Brand Successfully";
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var brand = _context.Brands.Find(id);
+            var brand = await _brandRepository.GetOneAsync(e => e.Id == id);
 
             if(brand is not null)
             {
@@ -50,29 +57,27 @@ namespace ECommerce514.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Brand brand)
+        public async Task<IActionResult> Edit(Brand brand)
         {
             if (!ModelState.IsValid)
             {
                 return View(brand);
             }
 
-            _context.Brands.Update(brand);
-            _context.SaveChanges();
+            await _brandRepository.UpdateAsync(brand);
 
             TempData["success-notification"] = "Update Brand Successfully";
 
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var brand = _context.Brands.Find(id);
+            var brand = await _brandRepository.GetOneAsync(e => e.Id == id);
 
             if (brand is not null)
             {
-                _context.Brands.Remove(brand);
-                _context.SaveChanges();
+                await _brandRepository.DeleteAsync(brand);
 
                 TempData["success-notification"] = "Delete Brand Successfully";
 
