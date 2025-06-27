@@ -1,20 +1,28 @@
 ﻿using ECommerce514.Models;
+using ECommerce514.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace ECommerce514.Repository
+namespace ECommerce514.Repositories
 {
-    public class CategoryRepository
+    public class Repository<T> : IRepository<T> where T : class
     {
-        private ApplicationDbContext _context = new();
+        private readonly ApplicationDbContext _context;// = new();
+        private DbSet<T> _db { set; get; }
+
+        public Repository(ApplicationDbContext context)
+        {
+            _context = context;
+            _db = _context.Set<T>();
+        }
 
         // CRUD
-        public async Task<bool> CreateAsync(Category category)
+        public async Task<bool> CreateAsync(T entity)
         {
             try
             {
-                await _context.AddAsync(category);
+                await _db.AddAsync(entity);
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -26,11 +34,11 @@ namespace ECommerce514.Repository
             } 
         }
 
-        public async Task<bool> UpdateAsync(Category category)
+        public async Task<bool> UpdateAsync(T entity)
         {
             try
             {
-                _context.Update(category);
+                _db.Update(entity);
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -42,11 +50,11 @@ namespace ECommerce514.Repository
             }
         }
 
-        public async Task<bool> DeleteAsync(Category category)
+        public async Task<bool> DeleteAsync(T entity)
         {
             try
             {
-                _context.Remove(category);
+                _db.Remove(entity);
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -58,9 +66,9 @@ namespace ECommerce514.Repository
             }
         }
 
-        public async Task<IEnumerable<Category>> GetAsync(Expression<Func<Category, bool>>? expression = null, Expression<Func<Category, object>>[]? includes = null, bool tracked = true)
+        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>>? expression = null, Expression<Func<T, object>>[]? includes = null, bool tracked = true)
         {
-            IQueryable<Category> categories = _context.Categories;
+            IQueryable<T> categories = _db;
 
             if (expression is not null)
             {
@@ -83,7 +91,7 @@ namespace ECommerce514.Repository
             return (await categories.ToListAsync());
         }
 
-        public async Task<Category?> GetOneAsync(Expression<Func<Category, bool>>? expression = null, Expression<Func<Category, object>>[]? includes = null, bool tracked = true)
+        public async Task<T?> GetOneAsync(Expression<Func<T, bool>>? expression = null, Expression<Func<T, object>>[]? includes = null, bool tracked = true)
         {
             return (await GetAsync(expression, includes, tracked)).FirstOrDefault();
         }

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace ECommerce514
 {
     public class Program
@@ -8,6 +10,12 @@ namespace ECommerce514
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                option=>option.UseSqlServer("Data Source=.;Initial Catalog=ECommerce514; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;")
+                );
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             var app = builder.Build();
 

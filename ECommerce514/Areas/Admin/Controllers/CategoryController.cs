@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ECommerce514.Repositories.IRepositories;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace ECommerce514.Areas.Admin.Controllers
@@ -7,7 +8,12 @@ namespace ECommerce514.Areas.Admin.Controllers
     public class CategoryController : Controller
     {
         //private ApplicationDbContext _context = new();
-        private CategoryRepository _categoryRepository = new();
+        private ICategoryRepository _categoryRepository;// = new CategoryRepository();
+
+        public CategoryController(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
 
         public async Task<IActionResult> Index()
         {
