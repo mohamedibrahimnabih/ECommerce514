@@ -68,27 +68,27 @@ namespace ECommerce514.Repositories
 
         public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>>? expression = null, Expression<Func<T, object>>[]? includes = null, bool tracked = true)
         {
-            IQueryable<T> categories = _db;
+            IQueryable<T> entities = _db;
 
             if (expression is not null)
             {
-                categories = categories.Where(expression);
+                entities = entities.Where(expression);
             }
 
             if (includes is not null)
             {
                 foreach (var item in includes)
                 {
-                    categories = categories.Include(item);
+                    entities = entities.Include(item);
                 }
             }
 
             if(!tracked)
             {
-                categories = categories.AsNoTracking();
+                entities = entities.AsNoTracking();
             }
 
-            return (await categories.ToListAsync());
+            return (await entities.ToListAsync());
         }
 
         public async Task<T?> GetOneAsync(Expression<Func<T, bool>>? expression = null, Expression<Func<T, object>>[]? includes = null, bool tracked = true)
