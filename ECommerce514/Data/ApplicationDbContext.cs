@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ECommerce514.ViewModels;
 
 namespace ECommerce514.Data
 {
@@ -25,5 +26,7 @@ namespace ECommerce514.Data
 
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=ECommerce514; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;");
         }
+        public DbSet<ECommerce514.ViewModels.RegisterVM> RegisterVM { get; set; } = default!;
+        public DbSet<ECommerce514.ViewModels.LoginVM> LoginVM { get; set; } = default!;
     }
 }

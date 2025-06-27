@@ -1,3 +1,6 @@
+using ECommerce514.Utility;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce514
@@ -15,8 +18,17 @@ namespace ECommerce514
                 option=>option.UseSqlServer("Data Source=.;Initial Catalog=ECommerce514; Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;")
                 );
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                option.Password.RequiredLength = 4;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var app = builder.Build();
 
