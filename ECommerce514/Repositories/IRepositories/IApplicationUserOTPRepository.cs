@@ -1,0 +1,6 @@
+﻿namespace ECommerce514.Repositories.IRepositories
+{
+    public interface IApplicationUserOTPRepository : IRepository<ApplicationUserOTP>
+    {
+    }
+}

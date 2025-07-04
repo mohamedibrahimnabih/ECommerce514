@@ -4,22 +4,8 @@
     var discountThreshold = 50;
 }
 
-@if (@TempData["success-notification"] is not null)
-{
-    @section Scripts {
-    <script>
-        toastr.success('@TempData["success-notification"]')
-    </script>
-    }
-}
-
-@if (@TempData["error-notification"] is not null)
-{
-    @section Scripts {
-    <script>
-        toastr.error('@TempData["error-notification"]')
-    </script>
-    }
+@section Scripts {
+    <partial name="_NotificationPartial.cshtml" />
 }
 
 <!-- Header-->
@@ -69,7 +55,7 @@
                                             {
                                                 <option value="@item.Id">@item.Name</option>
                                             }
-                                        } 
+                                        }
                                         else
                                         {
                                             <option value="@item.Id">@item.Name</option>
@@ -170,15 +156,17 @@ else
                 <ul class="pagination">
                     @if (!(ViewBag.currentPage == 1))
                     {
-                        <li class="page-item"><a class="page-link" href="@Url.Action("Index", new {
-                            
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new {
+
                             ProductName = ViewBag.productName,
                             MinPrice = ViewBag.minPrice,
                             MaxPrice = ViewBag.MaxPrice,
                             CategoryId = ViewBag.categoryId,
                             IsHot = ViewBag.isHot,
                             page = ViewBag.currentPage - 1
-                        })">Previous</a></li>
+                        })">Previous</a>
+                        </li>
                     }
                     @for (int i = 1; i <= ViewBag.totalNumberOfPages; i++)
                     {
@@ -208,7 +196,7 @@ else
                         })">Next</a>
                         </li>
                     }
-                    
+
                 </ul>
             </nav>
         </div>
