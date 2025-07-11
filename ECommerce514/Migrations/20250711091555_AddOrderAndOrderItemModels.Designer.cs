@@ -4,6 +4,7 @@ using ECommerce514.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce514.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250711091555_AddOrderAndOrderItemModels")]
+    partial class AddOrderAndOrderItemModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,9 +214,10 @@ namespace ECommerce514.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Carrier")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CarrierId")
+                    b.Property<int>("CarrierId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
@@ -223,12 +227,14 @@ namespace ECommerce514.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
                     b.Property<string>("SessionId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ShippedDate")
@@ -244,7 +250,7 @@ namespace ECommerce514.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("ECommerce514.Models.OrderItem", b =>
+            modelBuilder.Entity("ECommerce514.Models.OrderItems", b =>
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -489,7 +495,7 @@ namespace ECommerce514.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("ECommerce514.Models.OrderItem", b =>
+            modelBuilder.Entity("ECommerce514.Models.OrderItems", b =>
                 {
                     b.HasOne("ECommerce514.Models.Order", "Order")
                         .WithMany()

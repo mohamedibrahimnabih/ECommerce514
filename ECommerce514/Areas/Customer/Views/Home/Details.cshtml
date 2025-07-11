@@ -11,6 +11,7 @@
             <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="~/images/@Model.Product.MainImg" alt="..." /></div>
             <div class="col-md-6">
                 <div class="small mb-1"><div class="badge bg-primary text-white    ">@Model.Product.Category.Name</div></div>
+                <div class="small mb-1"><div class="badge bg-dark text-white    ">Stock: @Model.Product.Quantity</div></div>
                 <h1 class="display-5 fw-bolder">@Model.Product.Name</h1>
                 <div class="fs-5 mb-5">
                     <span class="text-decoration-line-through">@Model.Product.Price.ToString("c")</span>
@@ -18,11 +19,15 @@
                 </div>
                 <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus ipsam minima ea iste laborum vero?</p>
                 <div class="d-flex">
-                    <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Add to cart
-                    </button>
+                    <form asp-action="AddToCart" asp-controller="Cart">
+                        <input type="hidden" name="productId" value="@Model.Product.ProductId" />
+                        <input class="form-control text-center me-3" id="inputQuantity" type="number" name="count" value="1" style="max-width: 3rem" />
+                        <button type="submit" class="btn btn-outline-dark flex-shrink-0">
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to cart
+                        </button>
+                    </form>
+                    
                 </div>
             </div>
         </div>
